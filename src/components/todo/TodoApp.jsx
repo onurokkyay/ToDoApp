@@ -1,5 +1,5 @@
 import './TodoApp.css'
-import {BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom'
+import {BrowserRouter, Routes, Route, useNavigate, useParams} from 'react-router-dom'
 import { useState } from 'react'
 
 export default function TodoApp(){
@@ -11,7 +11,7 @@ export default function TodoApp(){
                     </Route>
                     <Route path= '/login' element= {<LoginComponent/>}> 
                     </Route>
-                    <Route path= '/welcome' element= {<WelcomeComponent/>}> 
+                    <Route path= '/welcome/:userName' element= {<WelcomeComponent/>}> 
                     </Route>
                     <Route path= '*' element= {<ErrorComponent/>}> 
                     </Route>
@@ -23,7 +23,7 @@ export default function TodoApp(){
 
 function LoginComponent(){
 
-    const [userName, setUserName]= useState('User Name')
+    const [userName, setUserName]= useState('Onur Okyay')
 
     const [password, setPassword]= useState('')
 
@@ -42,11 +42,11 @@ function LoginComponent(){
     }
 
     function handleSubmit(){
-        if(userName==='dummyUserName' && password==='dummyPassword'){
+        if(userName==='Onur Okyay' && password==='dummy'){
             console.log('Success')
             setShowSuccessMessage(true)
             setShowErrorMessage(false)
-            navigate('/welcome')
+            navigate(`/welcome/${userName}`)
         }
         else {
             console.log('Failed')
@@ -80,9 +80,16 @@ function LoginComponent(){
 }
 
 function WelcomeComponent(){
+
+    const params = useParams()
+
     return (
         <div className="Welcome">
-            Welcome Component
+            <h1>Welcome {params.userName}</h1>
+            <div>
+                 Welcome Component
+            </div>
+
         </div>
     )
 }
