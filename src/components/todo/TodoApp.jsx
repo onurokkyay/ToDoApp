@@ -5,6 +5,7 @@ import {
   Route,
   useNavigate,
   useParams,
+  Link,
 } from "react-router-dom";
 import { useState } from "react";
 
@@ -19,6 +20,7 @@ export default function TodoApp() {
             path="/welcome/:userName"
             element={<WelcomeComponent />}
           ></Route>
+          <Route path="/todos" element={<ListTodosComponent />}></Route>
           <Route path="*" element={<ErrorComponent />}></Route>
         </Routes>
       </BrowserRouter>
@@ -104,7 +106,9 @@ function WelcomeComponent() {
   return (
     <div className="Welcome">
       <h1>Welcome {params.userName}</h1>
-      <div>Welcome Component</div>
+      <div>
+        Manage Your Todos. <Link to="/todos">Go Here </Link>
+      </div>
     </div>
   );
 }
@@ -119,5 +123,47 @@ function ErrorComponent() {
 }
 
 function ListTodosComponent() {
-  return <div className="ListTodosComponent"></div>;
+  const today = new Date();
+  const targetDate = new Date(
+    today.getFullYear() + 12,
+    today.getMonth(),
+    today.getDay()
+  );
+  const todos = [
+    { id: 1, description: "Learn AWS", done: false, targetDate: targetDate },
+    {
+      id: 2,
+      description: "Learn Full Stack Dev",
+      done: false,
+      targetDate: targetDate,
+    },
+    { id: 3, description: "Learn DevOps", done: false, targetDate: targetDate },
+  ];
+  return (
+    <div className="ListTodosComponent">
+      <h1>Things You Want To Do!</h1>
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <td>ID</td>
+              <td>Description</td>
+              <td>Is Done?</td>
+              <td>Target Date</td>
+            </tr>
+          </thead>
+          <tbody>
+            {todos.map((todo) => (
+              <tr key={todo.id}>
+                <td>{todo.id}</td>
+                <td>{todo.description}</td>
+                <td>{todo.done.toString()}</td>
+                <td>{todo.targetDate.toDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
