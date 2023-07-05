@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { retrieveAllTodosForUserName } from "./api/TodoService";
+import { retrieveAllTodosForUserNameApi } from "./api/TodoService";
 function WelcomeComponent() {
   const { userName } = useParams();
 
@@ -9,7 +9,7 @@ function WelcomeComponent() {
   function callHelloWorld() {
     console.log("called" + userName);
 
-    retrieveAllTodosForUserName(userName)
+    retrieveAllTodosForUserNameApi(userName)
       .then((response) => successfulResponse(response))
       .catch((error) => errorResponse(error))
       .finally(() => console.log("cleanup"));
