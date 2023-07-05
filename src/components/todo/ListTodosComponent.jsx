@@ -3,6 +3,7 @@ import {
   deleteTodoApi,
   retrieveAllTodosForUserNameApi,
 } from "./api/TodoService";
+import { useAuth } from "./security/AuthContext";
 
 function ListTodosComponent() {
   const today = new Date();
@@ -18,15 +19,19 @@ function ListTodosComponent() {
 
   useEffect(() => refreshTodos(), []);
 
+  const authContext = useAuth();
+
+  const userName = authContext.userName;
+
   function refreshTodos() {
-    retrieveAllTodosForUserNameApi("onurokkyay")
+    retrieveAllTodosForUserNameApi(userName)
       .then((response) => setTodos(response.data))
       .catch((error) => console.log(error));
   }
 
   function deleteTodo(id) {
     console.log("clicked:" + id);
-    deleteTodoApi("onurokkyay", id)
+    deleteTodoApi(userName, id)
       .then(() => {
         setMessage(`Delete of todo with id:${id} succesful`);
         refreshTodos();
