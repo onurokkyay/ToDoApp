@@ -1,21 +1,22 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { retrieveHelloWorldBean } from "./api/TodoService";
+import { retrieveAllTodosForUserName } from "./api/TodoService";
 function WelcomeComponent() {
   const { userName } = useParams();
 
   const [message, setMessage] = useState(null);
 
   function callHelloWorld() {
-    console.log("called");
-    retrieveHelloWorldBean()
+    console.log("called" + userName);
+
+    retrieveAllTodosForUserName(userName)
       .then((response) => successfulResponse(response))
       .catch((error) => errorResponse(error))
       .finally(() => console.log("cleanup"));
   }
 
   function successfulResponse(response) {
-    setMessage(response.data.message);
+    //setMessage(response.data.message);
     console.log(response);
   }
 
