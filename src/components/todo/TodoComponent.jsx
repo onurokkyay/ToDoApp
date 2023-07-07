@@ -1,7 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "./security/AuthContext";
 import { useEffect, useState } from "react";
-import { retrieveTodoByIdApi } from "./api/TodoService";
+import { retrieveTodoByIdApi, updateTodoApi } from "./api/TodoService";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 
 export default function TodoComponent() {
@@ -16,6 +16,8 @@ export default function TodoComponent() {
   const [description, setDescription] = useState("");
   const [targetDate, setTargetDate] = useState("");
 
+  const navigate = useNavigate();
+
   function retrieveTodo() {
     retrieveTodoByIdApi(userName, id)
       .then((response) => {
@@ -27,17 +29,29 @@ export default function TodoComponent() {
 
   function onSubmit(values) {
     console.log(values);
+    const todo = {
+      id: id,
+      username: userName,
+      description: values.description,
+      targetDate: values.targetDate,
+      done: false,
+    };
+    updateTodoApi(userName, id, todo)
+      .then((response) => {
+        navigate("/todos");
+      })
+      .catch((error) => console.log(error));
   }
 
   function validate(values) {
     let errors = {
       //description: "Enter a valid description",
     };
-    if (values.description.length <5){
-        errors.description = 'Enter atleast 5 characters'
+    if (values.description.length < 5) {
+      errors.description = "Enter atleast 5 characters";
     }
-    if (values.targetDate == null ){
-        errors.description = 'Enter a target date'
+    if (values.targetDate == null) {
+      errors.description = "Enter a target date";
     }
     return errors;
   }
