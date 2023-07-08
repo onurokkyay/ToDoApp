@@ -2,7 +2,11 @@ import axios from "axios";
 import { apiClient } from "./ApiClient";
 
 export const executeBasicAuthenticationService = (token) =>
-  apiClient.get(`/auth/basic`);
+  apiClient.get(`/auth/basic`, {
+    headers: {
+      Authorization: token,
+    },
+  });
 
 export const retrieveAllTodosForUserNameApi = (userName) =>
   apiClient.get(`/users/${userName}/todos`);

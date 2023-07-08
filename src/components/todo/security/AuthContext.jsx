@@ -16,17 +16,15 @@ export default function AuthProvider({ children }) {
   async function login(userName, password) {
     const basicAuthToken = "Basic " + window.btoa(userName + ":" + password);
     try {
-      const response = await executeBasicAuthenticationService();
+      const response = await executeBasicAuthenticationService(basicAuthToken);
 
       if (response.status == 200) {
         setAuthenticated(true);
         setUserName(userName);
         setToken(basicAuthToken);
-        apiClient.interceptors.request.use(
-          config => {
-            config.headers.Authorization=basicAuthToken
-          }
-        )
+        apiClient.interceptors.request.use((config) => {
+          config.headers.Authorization = basicAuthToken;
+        });
         return true;
       } else {
         console.log("authfalse");
