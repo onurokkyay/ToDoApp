@@ -23,7 +23,9 @@ export default function AuthProvider({ children }) {
         setUserName(userName);
         setToken(basicAuthToken);
         apiClient.interceptors.request.use((config) => {
+          console.log("auth token set");
           config.headers.Authorization = basicAuthToken;
+          return config;
         });
         return true;
       } else {
