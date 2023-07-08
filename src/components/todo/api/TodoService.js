@@ -4,6 +4,13 @@ const apiClient = axios.create({
   baseURL: "http://localhost:8080",
 });
 
+export const executeBasicAuthenticationService = (token) =>
+  apiClient.get(`/auth/basic`, {
+    headers: {
+      Authorization: token,
+    },
+  });
+
 export const retrieveAllTodosForUserNameApi = (userName) =>
   apiClient.get(`/users/${userName}/todos`);
 
