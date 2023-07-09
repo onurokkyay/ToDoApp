@@ -1,35 +1,67 @@
-export default function TodoApp(){
-    return (
-        <div className="TodoApp">
-            <LoginComponent></LoginComponent>
-        </div>
-    )
+import "./TodoApp.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import LogoutComponent from "./LogoutComponent";
+import HeaderComponent from "./HeaderComponent";
+import ListTodosComponent from "./ListTodosComponent";
+import ErrorComponent from "./ErrorComponent";
+import WelcomeComponent from "./WelcomeComponent";
+import LoginComponent from "./LoginComponent";
+import AuthProvider, { useAuth } from "./security/AuthContext";
+import TodoComponent from "./TodoComponent";
+
+function AuthenticatedRoute({ children }) {
+  const authContext = useAuth();
+  if (authContext.isAuthenticated) {
+    return children;
+  }
+  return <Navigate to="/" />;
 }
 
-function LoginComponent(){
-    return (
-        <div className="Login">
-            <div className="LoginForm">
-                <div>
-                    <label>User Name</label>
-                    <input type="text" name="username"/>
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" name="password"/>
-                </div>
-                <div>
-                    <button type="button" name ="login">Login</button>
-                </div>
-            </div>
-        </div>
-    )
-}
-
-function WelcomeComponent(){
-    return (
-        <div className="Welcome">
-            Welcome Component
-        </div>
-    )
+export default function TodoApp() {
+  return (
+    <div className="TodoApp">
+      <AuthProvider>
+        <BrowserRouter>
+          <HeaderComponent />
+          <Routes>
+            <Route path="/" element={<LoginComponent />}></Route>
+            <Route path="/login" element={<LoginComponent />}></Route>
+            <Route
+              path="/welcome/:userName"
+              element={
+                <AuthenticatedRoute>
+                  <WelcomeComponent />
+                </AuthenticatedRoute>
+              }
+            ></Route>
+            <Route
+              path="/todos"
+              element={
+                <AuthenticatedRoute>
+                  <ListTodosComponent />
+                </AuthenticatedRoute>
+              }
+            ></Route>
+            <Route
+              path="/todos/:id"
+              element={
+                <AuthenticatedRoute>
+                  <TodoComponent />
+                </AuthenticatedRoute>
+              }
+            ></Route>
+            <Route
+              path="/logout"
+              element={
+                <AuthenticatedRoute>
+                  <LogoutComponent />
+                </AuthenticatedRoute>
+              }
+            ></Route>
+            <Route path="*" element={<ErrorComponent />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </div>
+  );
 }
