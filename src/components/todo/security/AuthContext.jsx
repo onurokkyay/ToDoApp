@@ -1,6 +1,6 @@
 import { createContext, useState, useContext } from "react";
-import { executeBasicAuthenticationService } from "../api/TodoService";
 import { apiClient } from "../api/ApiClient";
+import { executeJwtAuthenticationService } from "../api/AuthService";
 
 export const AuthContext = createContext();
 
@@ -14,22 +14,22 @@ export default function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
 
   async function login(userName, password) {
-    const basicAuthToken = "Basic " + window.btoa(userName + ":" + password);
     try {
-      const response = await executeBasicAuthenticationService(basicAuthToken);
-
+      const response = await executeJwtAuthenticationService(
+        userName,
+        password
+      );
       if (response.status == 200) {
+        const jwtToken = "Bearer " + response.data.token;
         setAuthenticated(true);
         setUserName(userName);
-        setToken(basicAuthToken);
+        setToken(jwtToken);
         apiClient.interceptors.request.use((config) => {
-          console.log("auth token set");
-          config.headers.Authorization = basicAuthToken;
+          config.headers.Authorization = jwtToken;
           return config;
         });
         return true;
       } else {
-        console.log("authfalse");
         logout();
         return false;
       }
